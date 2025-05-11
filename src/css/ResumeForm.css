@@ -1,0 +1,18 @@
+.response-container {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-family: 'Courier New', monospace;
+}
+
+p {
+  margin: 5px 0; /* Adds space between each line */
+  font-size: 14px;
+  color: #333;
+}
