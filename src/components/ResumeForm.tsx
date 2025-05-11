@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import '../css/ResumeForm.css'; 
-import api from '../services/api'; // Ensure this points to your axios instance with baseURL = http://localhost:8088
+import api from '../services/api';
+import handleAnalyze from '../function/Analyzer';
+import ErrorMessage from './ErrorMessage';
 
 const ResumeForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [responseData, setResponseData] = useState<string>(''); // State to store the response data
-  const [loading, setLoading] = useState(false); // State to manage loading status
+  const [responseData, setResponseData] = useState<string>('');
+  const [jobRole, setJobRole] = useState<string>(''); // ⬅️ NEW
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
+      setError(null);
     }
   };
 
@@ -18,9 +23,10 @@ const ResumeForm: React.FC = () => {
 
     if (file) {
       const formData = new FormData();
-      formData.append('file', file); // Key must match @RequestParam("file")
+      formData.append('file', file); 
 
-      setLoading(true); // Set loading to true when the request starts
+      setLoading(true);
+      setError(null);
 
       try {
         const response = await api.post('resume/api/api/resume/upload', formData, {
@@ -29,34 +35,54 @@ const ResumeForm: React.FC = () => {
           },
         });
         setResponseData(response.data.text); 
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error uploading resume', error);
+        setError('Failed to upload resume. Please try again.');
       } finally {
-        setLoading(false); // Set loading to false when the request ends
+        setLoading(false);
       }
     } else {
-      alert('Please select a file first.');
+      setError('Please select a file first.');
     }
   };
 
-  // Function to format and render the response text in a readable way
   const formatResponseData = (data: string) => {
     return data
-      .split('\n') // Split the text by newlines
-      .map((line, index) => <p key={index}>{line}</p>); // Map each line to a <p> tag for better readability
+      .split('\n')
+      .map((line, index) => <p key={index}>{line}</p>);
   };
 
   return (
-    <div>
+    <div className="resume-form-container">
+      {error && <ErrorMessage message={error} />}
+
+      {/* Job Role + Analyze button side by side */}
+      {responseData && !loading && (
+  <div className="analyze-section">
+    <input
+      type="text"
+      placeholder="Enter target job role"
+      value={jobRole}
+      onChange={(e) => setJobRole(e.target.value)}
+      className="job-role-input"
+    />
+    <button
+      className="analyze-button"
+      onClick={() => handleAnalyze(responseData, jobRole, setError)}
+    >
+      Analyze
+    </button>
+  </div>
+)}
+
+
       <form onSubmit={handleSubmit}>
         <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} />
         <button type="submit" disabled={loading}>Upload Resume</button>
       </form>
 
-      {/* Display loading status */}
       {loading && <p>Uploading...</p>}
 
-      {/* Display formatted response data if available */}
       {responseData && (
         <div className="response-container">
           <h3>Response Data:</h3>

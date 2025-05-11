@@ -1,18 +1,40 @@
-.response-container {
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  max-width: 100%;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  font-family: 'Courier New', monospace;
+.resume-form-container {
+  position: relative;
 }
 
-p {
-  margin: 5px 0; /* Adds space between each line */
+.analyze-section {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.job-role-input {
+  padding: 8px;
   font-size: 14px;
-  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.analyze-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.analyze-button:hover {
+  background-color: #45a049;
+}
+
+form {
+  margin-top: 50px;
+}
+
+.response-container {
+  margin-top: 20px;
 }
