@@ -1,38 +1,17 @@
 .resume-form-container {
   position: relative;
-  padding: 20px;
-  max-width: 100%;
-  margin: 0 auto;
 }
 
 .analyze-section {
-  display: flex;
-  gap: 10px;
-  align-items: center;
   position: absolute;
   top: 10px;
   right: 10px;
-  flex-wrap: nowrap; /* Prevent wrapping of items */
+  display: flex;
+  flex-direction: row; /* Left-to-right layout: button, then input */
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap; /* For responsiveness on small screens */
 }
-
-.job-role-input {
-  padding: 10px 12px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  max-width: 220px;
-  min-width: 150px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.job-role-input:focus {
-  border-color: #4CAF50;
-  outline: none;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
-
 
 .analyze-button {
   background-color: #4CAF50;
@@ -41,65 +20,38 @@
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
 .analyze-button:hover {
   background-color: #45a049;
 }
 
+.job-role-input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 270px;
+  min-width: 150px;
+  margin-left: 7px; /* Shift input field 7px to the right */
+}
+
 form {
-  margin-top: 20px; /* Adds space so the button doesn't overlap the form */
+  margin-top: 50px;
 }
 
 .response-container {
   margin-top: 20px;
-  position: relative;
 }
 
 .loading-spinner {
-  text-align: center;
-  font-size: 18px;
-  color: #007bff;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  padding: 20px;
 }
 
 .error-message {
   color: red;
   margin-top: 10px;
-  font-size: 14px;
-}
-
-/* Media Queries for responsiveness */
-@media (max-width: 768px) {
-  .analyze-section {
-    flex-direction: column; /* Stack the input and button vertically */
-    align-items: flex-start; /* Align them to the left */
-    top: 20px; /* Adjust the top spacing */
-    right: 10px; /* Adjust the right spacing */
-  }
-
-  .job-role-input {
-    width: 100%; /* Make the input take full width */
-    margin-bottom: 10px; /* Add space between the input and button */
-  }
-
-  .analyze-button {
-    width: 100%; /* Make the button take full width */
-  }
-}
-
-@media (max-width: 480px) {
-  .resume-form-container {
-    padding: 10px; /* Reduce padding for smaller screens */
-  }
-
-  .job-role-input {
-    font-size: 12px; /* Smaller font size for input */
-  }
-
-  .analyze-button {
-    font-size: 14px; /* Smaller font size for button */
-    padding: 8px 15px; /* Adjust padding for smaller screens */
-  }
 }

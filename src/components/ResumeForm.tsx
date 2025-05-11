@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import '../css/ResumeForm.css'; 
+import '../css/ResumeForm.css';
 import api from '../services/api';
 import handleAnalyze from '../function/Analyzer'; // Import the handler
+import { AnalysisResult } from '../types/resume';
 
 const ResumeForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -10,6 +11,7 @@ const ResumeForm: React.FC = () => {
   const [jobRole, setJobRole] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -22,7 +24,7 @@ const ResumeForm: React.FC = () => {
 
     if (file) {
       const formData = new FormData();
-      formData.append('file', file); 
+      formData.append('file', file);
 
       setLoading(true);
 
@@ -44,14 +46,41 @@ const ResumeForm: React.FC = () => {
     }
   };
 
-  const handleAnalyzeClick = () => {
+  const handleAnalyzeClick = async () => {
     setLoading(true);
-    handleAnalyze(responseData, jobRole, setError);
+    const result = await handleAnalyze(responseData, jobRole, setError);
+    if (result) {
+      setAnalysisResult(result); // Set the result
+      setResponseData("");
+    }
     setLoading(false);
   };
 
-  const formatResponseData = (data: string) => {
-    return data.split('\n').map((line, index) => <p key={index}>{line}</p>);
+  // Function to render sections dynamically
+  const renderSection = (title: string, content: any) => {
+    if (!content) return null; // Don't render sections with no content
+
+    return (
+      <div className="section">
+        <h4>{title}</h4>
+        {Array.isArray(content) ? (
+          <ul>
+            {content.map((item: any, index: number) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>{content}</p>
+        )}
+      </div>
+    );
+  };
+
+  const excludeKeys = ['id']; // List of keys to exclude
+
+  // Function to capitalize the first letter of each key
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' '); // Capitalize and replace underscores with spaces
   };
 
   return (
@@ -77,13 +106,40 @@ const ResumeForm: React.FC = () => {
         <button type="submit" disabled={loading}>Upload Resume</button>
       </form>
 
+      {/* Show analysis result only after analysis */}
+      {analysisResult && (
+        <div className="analysis-result">
+          <h2>Resume Analysis</h2>
+          <div>
+            {/* Render dynamic sections, excluding the keys in excludeKeys */}
+            {Object.keys(analysisResult.resumeAnalysisDto)
+              .filter((key) => !excludeKeys.includes(key))  // Exclude unwanted keys
+              .map((key) => {
+                const formattedKey = key === 'selection_chance_percent' 
+                  ? 'Selection Chance Percent' 
+                  : capitalizeFirstLetter(key); // Format key name
+                return renderSection(formattedKey, analysisResult.resumeAnalysisDto[key]);
+              })}
+          </div>
+
+          <h2>Improvements</h2>
+          <div>
+            {/* Render dynamic improvement sections */}
+            {Object.keys(analysisResult.improvements).map((key) => {
+              const formattedKey = capitalizeFirstLetter(key); // Format key name
+              return renderSection(formattedKey, analysisResult.improvements[key]);
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Only show analyzing spinner inside the response container */}
       {responseData && (
         <div className="response-container">
           {loading ? (
             <div className="loading-spinner">🔄 Analyzing...</div>
           ) : (
-            <div>{formatResponseData(responseData)}</div>
+            <div>{responseData.split('\n').map((line, index) => <p key={index}>{line}</p>)}</div>
           )}
         </div>
       )}

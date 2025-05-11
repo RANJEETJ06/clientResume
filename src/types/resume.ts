@@ -1,13 +1,12 @@
-// src/types/resume.ts
+interface ResumeAnalysisDto {
+  [key: string]: any;  // This allows us to dynamically handle different sections
+}
 
-export interface Resume {
-  name: string;
-  email: string;
-  phone: string;
-  skills: string[];
-  experience: string[];
-  education: string[];
-  contacts: string[];
-  projects: string[];
-  others: string[];
+interface Improvements {
+  [key: string]: any; // This allows us to dynamically handle different sections
+}
+
+export interface AnalysisResult {
+  resumeAnalysisDto: ResumeAnalysisDto;
+  improvements: Improvements;
 }

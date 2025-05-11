@@ -20,9 +20,7 @@ const handleAnalyze = async (
     const url = `/resume/ai/api/ai/analyze/{jobName=${encodedJobRole}}`;
 
     const response = await api.post(url, { text: responseData });
-
-    console.log('Analysis result:', response.data);
-    // handle result if needed
+    return response.data; 
   } catch (err: any) {
     setError(err.message || 'An error occurred during analysis.');
   }
