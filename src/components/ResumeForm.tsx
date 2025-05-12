@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import '../css/ResumeForm.css';
-import api from '../services/api';
-import handleAnalyze from '../function/Analyzer'; // Import the handler
-import { AnalysisResult } from '../types/resume';
+import React, { useState } from "react";
+import "../css/ResumeForm.css";
+import api from "../services/api";
+import handleAnalyze from "../function/Analyzer"; // Import the handler
+import { AnalysisResult } from "../types/resume";
 
 const ResumeForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [responseData, setResponseData] = useState<string>('');
+  const [responseData, setResponseData] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [jobRole, setJobRole] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [jobRole, setJobRole] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+    null
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -24,25 +26,29 @@ const ResumeForm: React.FC = () => {
 
     if (file) {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
       setLoading(true);
 
       try {
-        const response = await api.post('resume/api/api/resume/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await api.post(
+          "resume/api/api/resume/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         setResponseData(response.data.text);
         setIsUploaded(true); // Mark as uploaded
       } catch (error) {
-        console.error('Error uploading resume', error);
+        console.error("Error uploading resume", error);
       } finally {
         setLoading(false);
       }
     } else {
-      alert('Please select a file first.');
+      alert("Please select a file first.");
     }
   };
 
@@ -76,11 +82,11 @@ const ResumeForm: React.FC = () => {
     );
   };
 
-  const excludeKeys = ['id']; // List of keys to exclude
+  const excludeKeys = ["id"]; // List of keys to exclude
 
   // Function to capitalize the first letter of each key
   const capitalizeFirstLetter = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' '); // Capitalize and replace underscores with spaces
+    return str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, " "); // Capitalize and replace underscores with spaces
   };
 
   return (
@@ -102,8 +108,14 @@ const ResumeForm: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit}>
-        <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} />
-        <button type="submit" disabled={loading}>Upload Resume</button>
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          onChange={handleFileChange}
+        />
+        <button type="submit" disabled={loading}>
+          Upload Resume
+        </button>
       </form>
 
       {/* Show analysis result only after analysis */}
@@ -113,12 +125,16 @@ const ResumeForm: React.FC = () => {
           <div>
             {/* Render dynamic sections, excluding the keys in excludeKeys */}
             {Object.keys(analysisResult.resumeAnalysisDto)
-              .filter((key) => !excludeKeys.includes(key))  // Exclude unwanted keys
+              .filter((key) => !excludeKeys.includes(key)) // Exclude unwanted keys
               .map((key) => {
-                const formattedKey = key === 'selection_chance_percent' 
-                  ? 'Selection Chance Percent' 
-                  : capitalizeFirstLetter(key); // Format key name
-                return renderSection(formattedKey, analysisResult.resumeAnalysisDto[key]);
+                const formattedKey =
+                  key === "selection_chance_percent"
+                    ? "Selection Chance Percent"
+                    : capitalizeFirstLetter(key); // Format key name
+                return renderSection(
+                  formattedKey,
+                  analysisResult.resumeAnalysisDto[key]
+                );
               })}
           </div>
 
@@ -127,7 +143,10 @@ const ResumeForm: React.FC = () => {
             {/* Render dynamic improvement sections */}
             {Object.keys(analysisResult.improvements).map((key) => {
               const formattedKey = capitalizeFirstLetter(key); // Format key name
-              return renderSection(formattedKey, analysisResult.improvements[key]);
+              return renderSection(
+                formattedKey,
+                analysisResult.improvements[key]
+              );
             })}
           </div>
         </div>
@@ -139,7 +158,11 @@ const ResumeForm: React.FC = () => {
           {loading ? (
             <div className="loading-spinner">🔄 Analyzing...</div>
           ) : (
-            <div>{responseData.split('\n').map((line, index) => <p key={index}>{line}</p>)}</div>
+            <div>
+              {responseData.split("\n").map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
           )}
         </div>
       )}

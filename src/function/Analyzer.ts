@@ -1,4 +1,4 @@
-import api from '../services/api';
+import api from "../services/api";
 
 const handleAnalyze = async (
   responseData: string,
@@ -6,12 +6,12 @@ const handleAnalyze = async (
   setError: (message: string) => void
 ) => {
   if (!responseData) {
-    setError('Please upload a resume first.');
+    setError("Please upload a resume first.");
     return;
   }
 
   if (!jobRole.trim()) {
-    setError('Please enter a job role.');
+    setError("Please enter a job role.");
     return;
   }
 
@@ -20,9 +20,9 @@ const handleAnalyze = async (
     const url = `/resume/ai/api/ai/analyze/{jobName=${encodedJobRole}}`;
 
     const response = await api.post(url, { text: responseData });
-    return response.data; 
+    return response.data;
   } catch (err: any) {
-    setError(err.message || 'An error occurred during analysis.');
+    setError(err.message || "An error occurred during analysis.");
   }
 };
 

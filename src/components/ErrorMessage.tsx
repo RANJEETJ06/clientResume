@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ErrorMessageProps {
   message: string;
@@ -6,7 +6,7 @@ interface ErrorMessageProps {
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
   return (
-    <div style={{ color: 'red', marginTop: '1rem' }}>
+    <div style={{ color: "red", marginTop: "1rem" }}>
       <strong>Error:</strong> {message}
     </div>
   );

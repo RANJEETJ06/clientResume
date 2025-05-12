@@ -1,5 +1,5 @@
 interface ResumeAnalysisDto {
-  [key: string]: any;  // This allows us to dynamically handle different sections
+  [key: string]: any; // This allows us to dynamically handle different sections
 }
 
 interface Improvements {
