@@ -17,12 +17,11 @@ const App: React.FC = () => {
     const name = params.get("name");
     const email = params.get("email");
     const photo = params.get("photo");
-
-    if (name && email && photo) {
+    if (photo) {
       setUserData({
-        name: name,
-        email: email,
-        photo: photo,
+        name: name || "",
+        email: email || "",
+        photo,
       });
     }
   }, []);
